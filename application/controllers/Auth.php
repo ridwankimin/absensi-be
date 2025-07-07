@@ -37,23 +37,34 @@ class Auth extends RestController
         $p = $this->post('password'); //Pasword Posted
         $q = array('username' => $u); //For where query condition
         $this->load->config('jwt');
-        $kunci = $this->config->item('jwt_key');
+        $exp = $this->config->item('token_expire_time');
         $cekemail = $this->user->getdatauser($q);
         if ($cekemail) {
-            if ($cekemail[0]['status'] == 1) {
+            if ($cekemail[0]['verified'] == 1) {
                 // if ($p == $cekemail[0]['password']) {
-                if (password_verify(('Ndr00' . $p . 'MukeG!l3'), $cekemail[0]['password'])) {
+                $salt1 = '';
+                $salt2 = '';
+                if($cekemail[0]['is_salt']) {
+                        $salt1 = 'Ndr00';
+                        $salt2 = 'MukeG!l3';
+                }
+                if (password_verify(($salt1 . $p . $salt2), $cekemail[0]['password'])) {
                     //update last login
-                    $update = array('lastlogin' => date("Y-m-d H:i:s"));
-                    $where = array('id' => $cekemail[0]['id']);
+                    $update = array('last_login' => date("Y-m-d H:i:s"));
+                    $where = array('id_user' => $cekemail[0]['id_user']);
                     $this->user->updateUser($update, $where);
+                    $getRole = $this->user->getUserRole($cekemail[0]['id_user']);
+                    $getLokasi = $this->user->getLokasiKantor($cekemail[0]['lokasi_kantor_id']);
+                    $output['role'] = $getRole;
+                    $output['lokasi_kantor'] = $getLokasi;
 
                     unset($cekemail[0]["password"]);
                     
                     $token['username'] = $u;
                     $this->load->library('Authorization_Token');
                     $date = new DateTime();
-                    $token['exp'] = $date->getTimestamp() + 60 * 60 * 1; //To here is to generate token
+                    // $token['exp'] = $date->getTimestamp() + 60 * 60 * 2; //To here is to generate token
+                    $token['exp'] = $date->getTimestamp() + $exp; //To here is to generate token
                     
                     $output['token'] = $this->authorization_token->generateToken($cekemail[0]);
                     // $token['iat'] = $date->getTimestamp();
