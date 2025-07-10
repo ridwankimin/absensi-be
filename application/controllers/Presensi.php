@@ -125,7 +125,8 @@ class Presensi extends RestController
         }
         $tanggal = date('Y-m-d');
         if ($settingwaktu[0]['hari_pulang'] == 'hari_berikutnya') {
-            $tanggal = strtotime('-1 day', $tanggal);
+            $tanggal = date("Y-m-d", strtotime('-1 day', $tanggal));;
+            // $tanggal = strtotime('-1 day', $tanggal);
         }
         if ($this->post('cek_wfo') == 'wfa' && $this->post('jenis_presensi') == 'pulang') {
             $carilap = array(
