@@ -43,12 +43,16 @@ class Presensi extends RestController
     public function index_post()
     {
         $this->form_validation->set_data($this->post());
-        $this->form_validation->set_rules('lokasi_kantor_id', 'lokasi kantor', 'required|max_length[100]|xss_clean');
-        $this->form_validation->set_rules('upt_id', 'upt', 'required|max_length[4]|xss_clean');
-        $this->form_validation->set_rules('alamat', 'alamat', 'max_length[1000]|xss_clean');
-        $this->form_validation->set_rules('lat', 'latitude', 'required|max_length[50]|xss_clean');
-        $this->form_validation->set_rules('long', 'longitude', 'required|max_length[50]|xss_clean');
-        $this->form_validation->set_rules('user_id', 'user', 'required|max_length[12]|xss_clean');
+        $this->form_validation->set_rules('id_user', 'user', 'required|max_length[12]|xss_clean');
+        $this->form_validation->set_rules('zona', 'zona', 'max_length[4]|xss_clean');
+        $this->form_validation->set_rules('jenis_presensi', 'jenis presensi', 'required|max_length[10]|xss_clean');
+        $this->form_validation->set_rules('waktu_presensi_id', 'waktu presensi id', 'required|max_length[10]|xss_clean');
+        $this->form_validation->set_rules('latitude', 'latitude', 'required|max_length[50]|xss_clean');
+        $this->form_validation->set_rules('longitude', 'longitude', 'required|max_length[50]|xss_clean');
+        $this->form_validation->set_rules('raw_lokasi', 'raw lokasi', 'max_length[1000]|xss_clean');
+        $this->form_validation->set_rules('lokasi_kantor_id', 'lokasi kantor', 'max_length[100]|xss_clean');
+        $this->form_validation->set_rules('bagian_id', 'Bagian', 'max_length[100]|xss_clean');
+        $this->form_validation->set_rules('cek_wfo', 'wfo/wfa', 'required|max_length[3]|xss_clean');
         if ($this->form_validation->run() == FALSE) {
             // Jika validasi gagal, kirimkan respon dengan pesan error
             $this->response([
@@ -176,7 +180,7 @@ class Presensi extends RestController
             'jenis_presensi' => $this->post('jenis_presensi'),
             'batas_waktu_presensi' => $batasPresensi,
             'set_waktu_presensi_id' => $this->post('waktu_presensi_id'),
-            'latitude' => $this->post('latitude'),
+            'latitude' => $this->post('longitude'),
             'longitude' => $this->post('longitude'),
             'raw_lokasi' => $this->post('raw_lokasi'),
             'lokasi_kantor_id' => $this->post('lokasi_kantor_id'),
