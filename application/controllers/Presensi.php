@@ -92,7 +92,7 @@ class Presensi extends RestController
                 ], RESTController::HTTP_BAD_REQUEST);
                 return;
             }
-            $dist = $this->getDistance($datalokasi[0]['lat'], $datalokasi[0]['long'], $this->post('lat'), $this->post('long'));
+            $dist = $this->getDistance($datalokasi[0]['lat'], $datalokasi[0]['long'], $this->post('latitude'), $this->post('longitude'));
             $radius = $this->present->getSetting('radius_nilai');
             $satuanRadius = $this->present->getSetting('radius_satuan');
             $radius = $radius[0]['value'];
