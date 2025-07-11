@@ -21,7 +21,7 @@ class PresensiModel extends CI_Model{
 	}
 	function getDataTanggal($cari) {
 		$this->db->query('SET SESSION sql_mode = ""');
-		$this->db->select('tanggal,id_user,zona,
+		$this->db->select('tanggal,tanggal_real,id_user,zona,
 						MIN(IF(jenis_presensi = "masuk", waktu, null)) AS presensi_masuk,
 						MAX(IF(jenis_presensi = "pulang", waktu, null)) AS presensi_pulang,
 						MIN(IF(jenis_presensi = "masuk", batas_waktu_presensi, null)) AS batas_presensi_masuk,
