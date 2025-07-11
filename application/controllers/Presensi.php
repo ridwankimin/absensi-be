@@ -40,6 +40,36 @@ class Presensi extends RestController
         return $distance; //Kilometer
     }
 
+    public function index_get() {
+        $this->form_validation->set_data($this->get());
+        $this->form_validation->set_rules('id_user', 'user', 'required|max_length[12]|xss_clean');
+        $this->form_validation->set_rules('tanggal', 'tanggal', 'required|max_length[22]|xss_clean');
+        if ($this->form_validation->run() == FALSE) {
+            $this->response([
+                'status' => FALSE,
+                'message' => validation_errors()
+            ], RESTController::HTTP_BAD_REQUEST);
+            return;
+        }
+        $cari = array(
+            'id_user' => $this->get('id_user'),
+            'tanggal' => $this->get('tanggal'),
+        );
+        $data = $this->present->getDataTanggal($cari);
+        if($data) {
+            $this->response([
+                'status' => TRUE,
+                'message' => 'Data absen ditemukan',
+                'data' => $data[0]
+            ], RESTController::HTTP_OK);
+        } else {
+            $this->response([
+                'status' => FALSE,
+                'message' => 'Data absen tidak ditemukan'
+            ], RESTController::HTTP_NOT_FOUND);
+        }
+    }
+
     public function index_post()
     {
         $this->form_validation->set_data($this->post());
@@ -185,13 +215,13 @@ class Presensi extends RestController
             'raw_lokasi' => $this->post('raw_lokasi'),
             'lokasi_kantor_id' => $this->post('lokasi_kantor_id'),
             'bagian_id' => $this->post('bagian_id'),
-            'cek_wfo' => $this->post('cek_wfo'),
+            'cekwf' => $this->post('cek_wfo'),
         );
         $simpan = $this->present->simpanAbsen($simpanAbsen);
         if($simpan['status']) {
             $this->response([
                 'status' => TRUE,
-                'message' => 'Absen ' . $this->post('jenis_presensi') . ' tanggal ' . $tanggal . ' berhasil disimpan. Pukul ' . $waktu . ' ' . $zona
+                'message' => 'Absen ' . $this->post('jenis_presensi') . ' tanggal ' . $tanggal . ' berhasil disimpan. Pukul ' . $waktu . ' ' . strtoupper($zona)
             ], RESTController::HTTP_OK);
         } else {
             $this->response([

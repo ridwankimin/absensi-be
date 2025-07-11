@@ -19,4 +19,17 @@ class PresensiModel extends CI_Model{
 			return array("status" => false, "message" => $this->db->error());
 		}
 	}
+	function getDataTanggal($cari) {
+		$this->db->query('SET SESSION sql_mode = ""');
+		$this->db->select('tanggal,id_user,zona,
+						MIN(IF(jenis_presensi = "masuk", waktu, null)) AS presensi_masuk,
+						MAX(IF(jenis_presensi = "pulang", waktu, null)) AS presensi_pulang,
+						MIN(IF(jenis_presensi = "masuk", batas_waktu_presensi, null)) AS batas_presensi_masuk,
+						MAX(IF(jenis_presensi = "pulang", batas_waktu_presensi, null)) AS batas_presensi_pulang,
+						cekwf,lokasi_kantor_id');
+		$this->db->from('user_presensi'); 
+		$this->db->where($cari);
+		$this->db->group_by('set_waktu_presensi_id,tanggal');
+		return $this->db->get()->result_array();
+	}
 }
