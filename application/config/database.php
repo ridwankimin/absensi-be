@@ -1,5 +1,5 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') or exit('No direct script access allowed');
 
 /*
 | -------------------------------------------------------------------
@@ -76,11 +76,11 @@ $db['default'] = array(
 	'dsn'	=> '',
 	'hostname' => 'localhost',
 	'username' => 'root',
-	'password' => 'MRidwan123!',
+	'password' => 'admindpp',
 	// 'hostname' => '103.190.215.130',
 	// 'username' => 'apps',
 	// 'password' => 'su[B4r4ntin]',
-	'database' => 'absen_jago',
+	'database' => 'absen',
 	'dbdriver' => 'mysqli',
 	'dbprefix' => '',
 	'pconnect' => FALSE,
