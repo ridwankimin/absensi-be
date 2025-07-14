@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # Direktori
 config/database.php
 
@@ -7,6 +6,4 @@ config/database.php
 
 # Ekstensi file
 *.tmp
-=======
 application/config/database.php
->>>>>>> 9c6946821232ea374e1ee028cb2aa11c7df299d8
