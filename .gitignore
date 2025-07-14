@@ -1,0 +1,8 @@
+# Direktori
+config/database.php
+
+# File
+.htaccess
+
+# Ekstensi file
+*.tmp
