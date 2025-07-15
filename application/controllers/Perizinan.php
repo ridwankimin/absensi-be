@@ -46,9 +46,14 @@ class Perizinan extends RestController
                 'user_input'   => $this->post('user_input'),
                 'created_at'   => date('Y-m-d H:i:s')
             ];
-        if ($this->post('jenis_izin') == '1' && $this->post('nomor') != '') {
+        // if ($this->post('jenis_izin') == '1' && $this->post('nomor') != '') {
+        //     $data['nomor'] = preg_replace('/\s+/', '', $this->post('nomor'));
+        // }
+
+        if ($this->post('jenis_izin') == 'Dinas Luar' && $this->post('nomor') != '') {
             $data['nomor'] = preg_replace('/\s+/', '', $this->post('nomor'));
         }
+
 
         // Upload file jika ada
         if (!empty($_FILES['lampiran']['name'])) {
