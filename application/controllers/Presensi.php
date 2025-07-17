@@ -83,6 +83,7 @@ class Presensi extends RestController
         $this->form_validation->set_rules('lokasi_kantor_id', 'lokasi kantor', 'max_length[100]|xss_clean');
         $this->form_validation->set_rules('bagian_id', 'Bagian', 'max_length[100]|xss_clean');
         $this->form_validation->set_rules('cek_wfo', 'wfo/wfa', 'required|max_length[3]|xss_clean');
+        $this->form_validation->set_rules('ipaddress', 'ipaddress', 'max_length[100]|xss_clean');
         if ($this->form_validation->run() == FALSE) {
             // Jika validasi gagal, kirimkan respon dengan pesan error
             $this->response([
@@ -216,6 +217,7 @@ class Presensi extends RestController
             'lokasi_kantor_id' => $this->post('lokasi_kantor_id'),
             'bagian_id' => $this->post('bagian_id'),
             'cekwf' => $this->post('cek_wfo'),
+            'keterangan' => $this->post('ipaddress'),
         );
         $simpan = $this->present->simpanAbsen($simpanAbsen);
         if($simpan['status']) {
@@ -228,6 +230,27 @@ class Presensi extends RestController
                 'status' => FALSE,
                 'message' => $simpan['message'] ?? 'Absen gagal disimpan'
             ], RESTController::HTTP_BAD_REQUEST);
+        }
+    }
+
+    public function setting_get() {
+        $radius = $this->present->getSetting('radius_nilai');
+        $satuanRadius = $this->present->getSetting('radius_satuan');
+        if($radius) {
+            $sett = array(
+                "radius_nilai" => $radius[0]['value'],
+                "radius_satuan" => $satuanRadius[0]['value']
+            );
+            $this->response([
+                'status' => TRUE,
+                'message' => 'Berhasil mendapatkan setting presensi',
+                'data' => $sett
+            ], RESTController::HTTP_OK);
+        } else {
+            $this->response([
+                'status' => FALSE,
+                'message' => 'Gagal mendapatkan setting presensi'
+            ], RESTController::HTTP_INTERNAL_ERROR);
         }
     }
 }
