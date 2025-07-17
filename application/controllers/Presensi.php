@@ -213,7 +213,7 @@ class Presensi extends RestController
             'set_waktu_presensi_id' => $this->post('waktu_presensi_id'),
             'latitude' => $this->post('longitude'),
             'longitude' => $this->post('longitude'),
-            'raw_lokasi' => $this->post('raw_lokasi'),
+            'raw_lokasi' => $this->post('raw_lokasi') ? json_encode($this->post('raw_lokasi')) : null,
             'lokasi_kantor_id' => $this->post('lokasi_kantor_id'),
             'bagian_id' => $this->post('bagian_id'),
             'cekwf' => $this->post('cek_wfo'),
