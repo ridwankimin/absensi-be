@@ -6,6 +6,10 @@ class M_users extends CI_Model{
 		return $this->db->get_where('user', $q)->result_array();
 	}
 	
+	function getSettingWaktu($q) {
+		return $this->db->get_where('setting_waktu_presensi', $q)->result_array();
+	}
+	
 	function getdatauserAll() {
 		$this->db->select('id,username,nama,roles,status,lastLogin,created');
 		return $this->db->get('user')->result_array();
