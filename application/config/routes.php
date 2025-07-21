@@ -55,3 +55,4 @@ $route['translate_uri_dashes'] = FALSE;
 
 $route['login']['POST'] = 'auth/login';
 $route['api/perizinan']['post'] = 'ApiPerizinan/hasil';
+$route['perizinan']['GET'] = 'perizinan/index';
