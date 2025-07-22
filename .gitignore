@@ -5,3 +5,5 @@
 # Ekstensi file
 *.tmp
 application/config/database.php
+
+uploads/
