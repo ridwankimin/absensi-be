@@ -19,7 +19,7 @@ class PresensiModel extends CI_Model{
 			return array("status" => false, "message" => $this->db->error());
 		}
 	}
-	function getDataTanggal($cari) {
+	function getDataTanggal($cari, $data) {
 		$this->db->query('SET SESSION sql_mode = ""');
 		$this->db->select('tanggal,tanggal_real,id_user,zona,
 						MIN(IF(jenis_presensi = "masuk", waktu, null)) AS presensi_masuk,
@@ -28,7 +28,31 @@ class PresensiModel extends CI_Model{
 						MAX(IF(jenis_presensi = "pulang", batas_waktu_presensi, null)) AS batas_presensi_pulang,
 						cekwf,lokasi_kantor_id');
 		$this->db->from('user_presensi'); 
-		$this->db->where($cari);
+		if($data['shifting'] == 'Y') {
+			$this->db->where('id_user', $cari['id_user']);
+			$this->db->group_start();
+			$this->db->where('tanggal', $cari['tanggal']);			
+			$this->db->or_where('tanggal', date("Y-m-d", strtotime('-1 day', $cari['tanggal'])));			
+			$this->db->group_end();
+
+			if(count($data['shift_id']) == 1) {
+				$this->db->where('set_waktu_presensi_id', $data[0]['shift_id']);
+			} else {
+				$this->db->group_start();
+				$this->db->where('set_waktu_presensi_id', $data[0]['shift_id']);
+				$x = 0;
+				foreach($data['shift_id'] as $shift) {
+					if($x != 0) {
+						$this->db->or_where('set_waktu_presensi_id', $shift);
+					}
+					$x++;
+				}
+				$this->db->group_end();
+			}
+		} else {
+			$this->db->where($cari);
+		}
+		$this->db->order_by('tanggal', 'desc');
 		$this->db->group_by('set_waktu_presensi_id,tanggal');
 		return $this->db->get()->result_array();
 	}

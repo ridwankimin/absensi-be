@@ -40,10 +40,12 @@ class Presensi extends RestController
         return $distance; //Kilometer
     }
 
-    public function index_get() {
-        $this->form_validation->set_data($this->get());
+    public function history_post() {
+        $this->form_validation->set_data($this->post());
         $this->form_validation->set_rules('id_user', 'user', 'required|max_length[12]|xss_clean');
         $this->form_validation->set_rules('tanggal', 'tanggal', 'required|max_length[22]|xss_clean');
+        $this->form_validation->set_rules('shifting', 'shifting', 'max_length[1]|xss_clean');
+        $this->form_validation->set_rules('shift_id', 'shift_id', ($this->post('shifting') == 'Y' ? 'required|' : '') . 'xss_clean');
         if ($this->form_validation->run() == FALSE) {
             $this->response([
                 'status' => FALSE,
@@ -52,10 +54,10 @@ class Presensi extends RestController
             return;
         }
         $cari = array(
-            'id_user' => $this->get('id_user'),
-            'tanggal' => $this->get('tanggal'),
+            'id_user' => $this->post('id_user'),
+            'tanggal' => $this->post('tanggal'),
         );
-        $data = $this->present->getDataTanggal($cari);
+        $data = $this->present->getDataTanggal($cari, $this->post());
         if($data) {
             $this->response([
                 'status' => TRUE,
@@ -160,7 +162,7 @@ class Presensi extends RestController
         }
         $tanggal = date('Y-m-d');
         if ($settingwaktu[0]['hari_pulang'] == 'hari_berikutnya') {
-            $tanggal = date("Y-m-d", strtotime('-1 day', $tanggal));;
+            $tanggal = date("Y-m-d", strtotime('-1 day', $tanggal));
             // $tanggal = strtotime('-1 day', $tanggal);
         }
         if ($this->post('cek_wfo') == 'wfa' && $this->post('jenis_presensi') == 'pulang') {

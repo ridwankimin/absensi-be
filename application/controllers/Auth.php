@@ -85,7 +85,8 @@ class Auth extends RestController
                     // $token['iat'] = $date->getTimestamp();
                     $output['data'] = $cekemail[0];
                     // $output['token'] = JWT::encode($token, $kunci, 'HS256'); //This is the output token
-                    $output['expired'] = date("Y-m-d H:i:s", $token['exp']);
+                    $output['expired'] = $token['exp'];
+                    // $output['expired'] = date("Y-m-d H:i:s", $token['exp']);
                     $this->response([
                         'status' => TRUE,
                         'message' => 'Login sukses',

@@ -513,6 +513,7 @@ $config['time_reference'] = 'Asia/Jakarta';
 |
 */
 $config['rewrite_short_tags'] = FALSE;
+$config['passDom'] = "14[/G8>a2<N(3#zrk";
 
 /*
 |--------------------------------------------------------------------------
