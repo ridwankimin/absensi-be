@@ -313,4 +313,13 @@ switch (ENVIRONMENT)
  *
  * And away we go...
  */
+$dotenv = parse_ini_file(__DIR__ . '/.env');
+if ($dotenv) {
+	foreach ($dotenv as $key => $value) {
+		putenv("$key=$value");
+		$_ENV[$key] = $value;
+		$_SERVER[$key] = $value;
+	}
+}
+
 require_once BASEPATH.'core/CodeIgniter.php';
