@@ -23,7 +23,7 @@ class Auth extends RestController
     public function login_post()
     {
         $this->form_validation->set_data($this->post());
-        $this->form_validation->set_rules('username','Username','required|max_length[12]|xss_clean');
+        $this->form_validation->set_rules('username', 'Username', 'required|max_length[12]|xss_clean');
         $this->form_validation->set_rules('password', 'PASSWORD', 'required|xss_clean');
         if ($this->form_validation->run() == FALSE) {
             // Jika validasi gagal, kirimkan respon dengan pesan error
@@ -44,9 +44,9 @@ class Auth extends RestController
                 // if ($p == $cekemail[0]['password']) {
                 $salt1 = '';
                 $salt2 = '';
-                if($cekemail[0]['is_salt']) {
-                        $salt1 = 'Ndr00';
-                        $salt2 = 'MukeG!l3';
+                if ($cekemail[0]['is_salt']) {
+                    $salt1 = 'Ndr00';
+                    $salt2 = 'MukeG!l3';
                 }
                 if (password_verify(($salt1 . $p . $salt2), $cekemail[0]['password'])) {
                     //update last login
@@ -74,13 +74,13 @@ class Auth extends RestController
                     $output['setting_waktu'] = $setWaktu;
 
                     unset($cekemail[0]["password"]);
-                    
+
                     $token['username'] = $u;
                     $this->load->library('Authorization_Token');
                     $date = new DateTime();
                     // $token['exp'] = $date->getTimestamp() + 60 * 60 * 2; //To here is to generate token
                     $token['exp'] = $date->getTimestamp() + $exp; //To here is to generate token
-                    
+
                     $output['token'] = $this->authorization_token->generateToken($cekemail[0]);
                     // $token['iat'] = $date->getTimestamp();
                     $output['data'] = $cekemail[0];
@@ -111,7 +111,7 @@ class Auth extends RestController
             ], RESTController::HTTP_BAD_REQUEST);
         }
     }
-    
+
     public function index_post()
     {
         $this->load->library('Authorization_Token');
@@ -155,7 +155,7 @@ class Auth extends RestController
             'created' => date('Y-m-d H:i:s')
         );
         $insert = $this->user->insertUser($input);
-        if($insert > 0) {
+        if ($insert > 0) {
             $this->response([
                 'status' => TRUE,
                 'message' => 'Sukses insert user'
@@ -167,7 +167,7 @@ class Auth extends RestController
             ], RESTController::HTTP_BAD_REQUEST);
         }
     }
-    
+
     public function index_put()
     {
         $this->load->library('Authorization_Token');
@@ -202,11 +202,11 @@ class Auth extends RestController
             'roles' => $this->put('roles'),
             'created' => date('Y-m-d H:i:s')
         );
-        if($this->put('password')) {
+        if ($this->put('password')) {
             $input['password'] = password_hash(('Ndr00' . $this->put('password') . 'MukeG!l3'), PASSWORD_DEFAULT);
         }
         $insert = $this->user->updateUser($input, array('id' => $this->put('id')));
-        if($insert > 0) {
+        if ($insert > 0) {
             $this->response([
                 'status' => TRUE,
                 'message' => 'Sukses update user'
@@ -219,7 +219,8 @@ class Auth extends RestController
         }
     }
 
-    public function index_delete() {
+    public function index_delete()
+    {
         $this->load->library('Authorization_Token');
         $is_valid_token = $this->authorization_token->validateToken();
 
@@ -248,5 +249,93 @@ class Auth extends RestController
                 'message' => 'Data user sudah terupdate'
             ], RESTController::HTTP_OK);
         }
+    }
+    public function reset_password_post()
+    {
+        // $inputJSON = file_get_contents('php://input');
+        // $input = json_decode($inputJSON, TRUE);
+        $input = json_decode(trim(file_get_contents('php://input')));
+
+        $nip = isset($input->nip) ? $input->nip : null;
+        $foto_base64 = isset($input->foto_base64) ? $input->foto_base64 : null;
+        $password_lama = isset($input->password_lama) ? $input->password_lama : null;
+        $password_baru = isset($input->password_baru) ? $input->password_baru : null;
+
+        $foto_base64 = $this->post('foto_base64');
+
+        if (!$nip) {
+            return $this->response(['status' => false, 'message' => 'NIP wajib diisi'], 400);
+        }
+
+        $user = $this->db->get_where('user', ['nip' => $nip])->row();
+
+        if (!$user) {
+            return $this->response(['status' => false, 'message' => 'User tidak ditemukan'], 404);
+        }
+
+        // --- Jika ingin mengubah password ---
+        if (!empty($password_lama) && !empty($password_baru)) {
+            if (!password_verify($password_lama, $user->password)) {
+                return $this->response(['status' => false, 'message' => 'Password lama salah'], 400);
+            }
+
+            $this->db->where('nip', $nip)->update('user', [
+                'password' => password_hash($password_baru, PASSWORD_DEFAULT),
+            ]);
+        }
+
+        // --- Jika ingin mengunggah foto profil ---
+        if (!empty($foto_base64)) {
+            // Hapus foto lama jika bukan default
+            if ($user->avatar && $user->avatar !== 'images/user.png') {
+                $old_path = FCPATH . $user->avatar;
+                if (file_exists($old_path)) {
+                    unlink($old_path);
+                }
+            }
+
+            $foto_path = $this->_simpan_foto($foto_base64, $nip);
+            if ($foto_path) {
+                $this->db->where('nip', $nip)->update('user', ['avatar' => $foto_path]);
+            }
+        }
+
+        return $this->response(['status' => true, 'message' => 'Profil berhasil diperbarui'], 200);
+    }
+
+
+    // Fungsi bantu simpan foto
+    private function _simpan_foto($base64, $nip)
+    {
+        $folder = './uploads/';
+        if (!file_exists($folder)) {
+            mkdir($folder, 0755, true);
+        }
+
+        // Pisahkan metadata dan data base64
+        $data = explode(',', $base64);
+        if (count($data) !== 2) return false;
+
+        $meta = $data[0];  // contoh: "data:image/png;base64"
+        $encoded = $data[1];
+
+        // Ambil ekstensi file dari metadata
+        if (preg_match('/^data:image\/(\w+);base64$/', $meta, $matches)) {
+            $ext = $matches[1];  // png / jpg / jpeg
+        } else {
+            return false;
+        }
+
+        // Generate nama file
+        $filename = str_replace(' ', '_', 'avatar_' . $nip . '_' . time() . '.' . $ext);
+        $path = $folder . $filename;
+
+        // Decode dan simpan
+        $decoded = base64_decode($encoded);
+        if ($decoded === false) return false;
+
+        file_put_contents($path, $decoded);
+
+        return $filename;
     }
 }
