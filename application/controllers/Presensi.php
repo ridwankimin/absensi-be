@@ -40,12 +40,10 @@ class Presensi extends RestController
         return $distance; //Kilometer
     }
 
-    public function history_post() {
-        $this->form_validation->set_data($this->post());
+    public function index_get() {
+        $this->form_validation->set_data($this->get());
         $this->form_validation->set_rules('id_user', 'user', 'required|max_length[12]|xss_clean');
         $this->form_validation->set_rules('tanggal', 'tanggal', 'required|max_length[22]|xss_clean');
-        $this->form_validation->set_rules('shifting', 'shifting', 'max_length[1]|xss_clean');
-        $this->form_validation->set_rules('shift_id', 'shift_id', ($this->post('shifting') == 'Y' ? 'required|' : '') . 'xss_clean');
         if ($this->form_validation->run() == FALSE) {
             $this->response([
                 'status' => FALSE,
@@ -54,10 +52,10 @@ class Presensi extends RestController
             return;
         }
         $cari = array(
-            'id_user' => $this->post('id_user'),
-            'tanggal' => $this->post('tanggal'),
+            'id_user' => $this->get('id_user'),
+            'tanggal' => $this->get('tanggal'),
         );
-        $data = $this->present->getDataTanggal($cari, $this->post());
+        $data = $this->present->getDataTanggal($cari);
         if($data) {
             $this->response([
                 'status' => TRUE,
@@ -162,7 +160,7 @@ class Presensi extends RestController
         }
         $tanggal = date('Y-m-d');
         if ($settingwaktu[0]['hari_pulang'] == 'hari_berikutnya') {
-            $tanggal = date("Y-m-d", strtotime('-1 day', $tanggal));
+            $tanggal = date("Y-m-d", strtotime('-1 day', $tanggal));;
             // $tanggal = strtotime('-1 day', $tanggal);
         }
         if ($this->post('cek_wfo') == 'wfa' && $this->post('jenis_presensi') == 'pulang') {
@@ -213,9 +211,9 @@ class Presensi extends RestController
             'jenis_presensi' => $this->post('jenis_presensi'),
             'batas_waktu_presensi' => $batasPresensi,
             'set_waktu_presensi_id' => $this->post('waktu_presensi_id'),
-            'latitude' => $this->post('latitude'),
+            'latitude' => $this->post('longitude'),
             'longitude' => $this->post('longitude'),
-            'raw_lokasi' => $this->post('raw_lokasi') ? json_encode($this->post('raw_lokasi')) : null,
+            'raw_lokasi' => $this->post('raw_lokasi'),
             'lokasi_kantor_id' => $this->post('lokasi_kantor_id'),
             'bagian_id' => $this->post('bagian_id'),
             'cekwf' => $this->post('cek_wfo'),

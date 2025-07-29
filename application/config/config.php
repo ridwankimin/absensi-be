@@ -23,7 +23,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | a PHP script and you can easily do that on your own.
 |
 */
-$config['base_url'] = 'http://localhost/rest-prior/';
+$config['base_url'] = 'http://localhost/absensi-be/';
 
 /*
 |--------------------------------------------------------------------------
@@ -513,7 +513,6 @@ $config['time_reference'] = 'Asia/Jakarta';
 |
 */
 $config['rewrite_short_tags'] = FALSE;
-$config['passDom'] = "14[/G8>a2<N(3#zrk";
 
 /*
 |--------------------------------------------------------------------------

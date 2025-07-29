@@ -30,7 +30,11 @@ class Absen extends CI_Controller {
         $this->db->where('id_user', $user_id);
         $this->db->order_by('tanggal', 'DESC');
         $this->db->order_by('waktu', 'ASC');
+<<<<<<< HEAD
+        $this->db->order_by('cekwf', 'ASC');
+=======
 		$this->db->order_by('cekwf', 'ASC');
+>>>>>>> b5529aefe4a74997d5bdae044ed1fda4972d263d
         $query = $this->db->get('user_presensi');
 
         echo json_encode([

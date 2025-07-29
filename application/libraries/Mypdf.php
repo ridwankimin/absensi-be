@@ -16,16 +16,12 @@ class Mypdf
 
     public function generate($view, $data = array(), $filename = 'Laporan', $paper = 'A4', $orientation = 'portrait')
     {
-        $encript = $this->config->item("passDom");
         $dompdf = new Dompdf();
         $html = $this->ci->load->view($view, $data, TRUE);
         $dompdf->loadHtml($html);
         $dompdf->setPaper($paper, $orientation);
         // Render the HTML as PDF
         $dompdf->render();
-        $cpdf = $dompdf->getCanvas()->get_cpdf();
-        $cpdf->setEncryption("", $encript, ['print', 'copy'], 1);
-        $this->injectPageCount($dompdf);
         $this->injectPageCount($dompdf);
         $dompdf->stream($filename . ".pdf", array("Attachment" => FALSE));
     }
@@ -38,6 +34,7 @@ class Mypdf
         $dompdf->setPaper($paper, $orientation);
         // Render the HTML as PDF
         $dompdf->render();
+        $this->injectPageCount($dompdf);
         //    $dompdf->stream();
         // echo hex2bin($dompdf->render());
         // $dompdf->stream($filename . ".pdf", array("Attachment" => FALSE));

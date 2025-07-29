@@ -1,7 +1,11 @@
 # Direktori
+config/database.php
+
 # File
 .htaccess
 
 # Ekstensi file
 *.tmp
 application/config/database.php
+
+uploads/
