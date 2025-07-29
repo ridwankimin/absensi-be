@@ -55,23 +55,8 @@ class Auth extends RestController
                     $this->user->updateUser($update, $where);
                     $getRole = $this->user->getUserRole($cekemail[0]['id_user']);
                     $getLokasi = $this->user->getLokasiKantor($cekemail[0]['lokasi_kantor_id']);
-                    $setWaktu = [];
-                    // if($cekemail[0]['shifting'] == 'Y') {
-                    //     $cariWaktu = array(
-                    //         'jenis' => 'shift',
-                    //         'upt' => $cekemail[0]['upt_id'] ? substr($cekemail[0]['upt_id'], 0, 2) : "10"
-                    //     );
-                    //     $setWaktu = $this->user->getSettingWaktu($cariWaktu);
-                    // } else {
-                    // }
-                    $cariWaktu = array(
-                        'jenis' => 'office',
-                        'gunakan' => 'Y'
-                    );
-                    $setWaktu = $this->user->getSettingWaktu($cariWaktu);
                     $output['role'] = $getRole;
                     $output['lokasi_kantor'] = $getLokasi;
-                    $output['setting_waktu'] = $setWaktu;
 
                     unset($cekemail[0]["password"]);
 
@@ -85,8 +70,7 @@ class Auth extends RestController
                     // $token['iat'] = $date->getTimestamp();
                     $output['data'] = $cekemail[0];
                     // $output['token'] = JWT::encode($token, $kunci, 'HS256'); //This is the output token
-                    $output['expired'] = $token['exp'];
-                    // $output['expired'] = date("Y-m-d H:i:s", $token['exp']);
+                    $output['expired'] = date("Y-m-d H:i:s", $token['exp']);
                     $this->response([
                         'status' => TRUE,
                         'message' => 'Login sukses',

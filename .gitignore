@@ -1,4 +1,6 @@
 # Direktori
+config/database.php
+
 # File
 .htaccess
 

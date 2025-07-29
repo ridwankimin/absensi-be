@@ -23,7 +23,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | a PHP script and you can easily do that on your own.
 |
 */
-$config['base_url'] = 'http://localhost/rest-prior/';
+$config['base_url'] = 'http://localhost/absensi-be/';
 
 /*
 |--------------------------------------------------------------------------
@@ -138,8 +138,8 @@ $config['subclass_prefix'] = 'MY_';
 | Note: This will NOT disable or override the CodeIgniter-specific
 |	autoloading (application/config/autoload.php)
 */
-$config['composer_autoload'] = FALSE;
-// $config['composer_autoload'] = FCPATH . 'vendor/autoload.php';
+// $config['composer_autoload'] = FALSE;
+$config['composer_autoload'] = FCPATH . 'vendor/autoload.php';
 
 /*
 |--------------------------------------------------------------------------
@@ -513,7 +513,6 @@ $config['time_reference'] = 'Asia/Jakarta';
 |
 */
 $config['rewrite_short_tags'] = FALSE;
-$config['passDom'] = "14[/G8>a2<N(3#zrk";
 
 /*
 |--------------------------------------------------------------------------

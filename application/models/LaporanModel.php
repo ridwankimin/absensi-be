@@ -29,8 +29,6 @@ class LaporanModel extends CI_Model
 								THEN "tl_tap"
 						WHEN (waktu_presensi_masuk IS NULL OR waktu_presensi_masuk = "" OR waktu_presensi_masuk = "00:00:00")  AND (waktu_presensi_pulang IS NULL OR waktu_presensi_pulang = "" OR waktu_presensi_pulang = "00:00:00")
 								THEN "tam_tap"
-						WHEN waktu_presensi_masuk > batas_waktu_presensi_masuk  AND (waktu_presensi_pulang IS NULL OR waktu_presensi_pulang = "" OR waktu_presensi_pulang = "00:00:00")
-								THEN "tl_tap"
 						WHEN waktu_presensi_masuk > batas_waktu_presensi_masuk 
 								AND waktu_presensi_pulang < batas_waktu_presensi_pulang
 								THEN "tl_psw"
@@ -80,7 +78,7 @@ class LaporanModel extends CI_Model
         $this->db->group_by('tanggal, id_user');
         // $this->db->order_by('unit_kerja,user.nip,tanggal', 'asc');
         $getsub = $this->db->get_compiled_select();
-        $this->db->select('unit_kerja,nama, nip, tanggal, waktu_presensi_masuk, batas_waktu_presensi_masuk,
+        $this->db->select('unit_kerja,nama, nip, tanggal,tanggal_real, waktu_presensi_masuk, batas_waktu_presensi_masuk,
 						waktu_presensi_pulang, batas_waktu_presensi_pulang,
 						CASE
 							WHEN waktu_presensi_masuk > batas_waktu_presensi_masuk
