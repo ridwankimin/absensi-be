@@ -42,7 +42,9 @@ class Auth extends RestController
         if ($cekemail) {
             if ($cekemail[0]['verified'] == 1) {
                 // if ($p == $cekemail[0]['password']) {
-                if (password_verify($p, $cekemail[0]['password'])) {
+                $salt1 = 'Ndr00';
+                $salt2 = 'MukeG!l3';
+                if (password_verify(($cekemail[0]['is_salt'] == '0000-00-00 00:00:00' ? $salt1 . $p . $salt2 : $p), $cekemail[0]['password'])) {
                     //update last login
                     $update = array('last_login' => date("Y-m-d H:i:s"));
                     $where = array('id_user' => $cekemail[0]['id_user']);
