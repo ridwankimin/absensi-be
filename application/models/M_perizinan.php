@@ -9,10 +9,11 @@ class M_perizinan extends CI_Model
     }
     public function get_by_user($nip)
     {
-        $this->db->select('perizinan.*, user.nip');
+        $this->db->select('perizinan.*, user.nip, user.nama');
         $this->db->from('perizinan');
-        $this->db->join('user', 'id_user = perizinan.user_input'); // sesuaikan kalau bukan 'id'
+        $this->db->join('user', 'user.nama = perizinan.user_input'); // GANTI sesuai nama kolom valid
         $this->db->where('user.nip', $nip);
+        $this->db->order_by('perizinan.created_at', 'DESC');
         return $this->db->get()->result_array();
     }
 }
