@@ -101,4 +101,30 @@ class Perizinan extends RestController
         // tangani preflight CORS
         return $this->response(null, 200);
     }
+    public function index_get()
+    {
+        $nip = $this->get('nip');
+
+        if (!$nip) {
+            return $this->response([
+                'status' => false,
+                'message' => 'NIP tidak diberikan'
+            ], 400);
+        }
+
+        $data = $this->perizinan->get_by_user($nip);
+
+        if ($data) {
+            return $this->response([
+                'status' => true,
+                'message' => 'Data ditemukan',
+                'data' => $data
+            ], 200);
+        } else {
+            return $this->response([
+                'status' => false,
+                'message' => 'Data tidak ditemukan'
+            ], 404);
+        }
+    }
 }
