@@ -11,7 +11,7 @@ class M_perizinan extends CI_Model
     {
         $this->db->select('perizinan.*, user.nip, user.nama');
         $this->db->from('perizinan');
-        $this->db->join('user', 'user.nama = perizinan.user_input'); // GANTI sesuai nama kolom valid
+        $this->db->join('user', 'user.nama = perizinan.user_input');
         $this->db->where('user.nip', $nip);
         $this->db->order_by('perizinan.created_at', 'DESC');
         return $this->db->get()->result_array();
