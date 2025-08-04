@@ -16,4 +16,8 @@ class M_perizinan extends CI_Model
         $this->db->order_by('perizinan.created_at', 'DESC');
         return $this->db->get()->result_array();
     }
+    // public function update($id, $data)
+    // {
+    //     return $this->db->where('id', $id)->update('perizinan', $data);
+    // }
 }

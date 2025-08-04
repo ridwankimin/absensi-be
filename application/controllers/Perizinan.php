@@ -127,4 +127,68 @@ class Perizinan extends RestController
             ], 404);
         }
     }
+    // public function update_post($id)
+    // {
+    //     $data = [
+    //         'perihal'      => $this->post('perihal'),
+    //         'jenis_izin'   => $this->post('jenis_izin'),
+    //         'tgl_mulai'    => $this->post('tgl_mulai'),
+    //         'tgl_selesai'  => $this->post('tgl_selesai'),
+    //         'p_upt'        => $this->post('p_upt'),
+    //         'p_bagian'     => $this->post('p_bagian'),
+    //         'user_input'   => $this->post('user_input'),
+    //     ];
+
+    //     if ($this->post('jenis_izin') == 'Dinas Luar' && $this->post('nomor') != '') {
+    //         $data['nomor'] = preg_replace('/\s+/', '', $this->post('nomor'));
+    //     }
+
+    //     // Handle upload baru jika ada
+    //     if (isset($_FILES['lampiran']) && !empty($_FILES['lampiran']['name'])) {
+    //         $jenis_izin = $this->post('jenis_izin');
+    //         $nip        = $this->post('nip');
+    //         $kode_unik  = str_pad(mt_rand(0, 9999999999), 10, '0', STR_PAD_LEFT);
+    //         $ext        = pathinfo($_FILES['lampiran']['name'], PATHINFO_EXTENSION);
+
+    //         $singkatan  = $this->singkatan_izin($jenis_izin);
+    //         $nama_file  = $singkatan . $nip . $kode_unik . '.' . $ext;
+
+    //         $config['upload_path']   = './uploads/';
+    //         $config['allowed_types'] = 'jpg|jpeg|png|pdf';
+    //         $config['file_name']     = $nama_file;
+
+    //         $this->upload->initialize($config);
+
+    //         if ($this->upload->do_upload('lampiran')) {
+    //             $uploadData = $this->upload->data();
+    //             $data['lampiran'] = $uploadData['file_name'];
+    //             $lampiran_lama = $this->post('lampiran_lama');
+    //             if (!empty($lampiran_lama)) {
+    //                 @unlink('./uploads/' . $lampiran_lama);
+    //             }
+    //         } else {
+    //             return $this->response([
+    //                 'status' => false,
+    //                 'message' => 'Upload gagal: ' . $this->upload->display_errors()
+    //             ], 400);
+    //         }
+    //     } else {
+    //         $data['lampiran'] = $this->post('lampiran_lama');
+    //     }
+
+    //     $this->load->model('M_perizinan', 'perizinan');
+    //     $updated = $this->perizinan->update($id, $data);
+
+    //     if ($updated) {
+    //         return $this->response([
+    //             'status' => true,
+    //             'message' => 'Data berhasil diperbarui'
+    //         ], 200);
+    //     } else {
+    //         return $this->response([
+    //             'status' => false,
+    //             'message' => 'Gagal memperbarui data'
+    //         ], 500);
+    //     }
+    // }
 }
