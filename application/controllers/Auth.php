@@ -42,16 +42,26 @@ class Auth extends RestController
         if ($cekemail) {
             if ($cekemail[0]['verified'] == 1) {
                 // if ($p == $cekemail[0]['password']) {
-                $salt1 = 'Ndr00';
-                $salt2 = 'MukeG!l3';
-                if (password_verify(($cekemail[0]['is_salt'] == '0000-00-00 00:00:00' ? $salt1 . $p . $salt2 : $p), $cekemail[0]['password'])) {
+                if (password_verify($p, $cekemail[0]['password'])) {
                     //update last login
                     $update = array('last_login' => date("Y-m-d H:i:s"));
                     $where = array('id_user' => $cekemail[0]['id_user']);
                     $this->user->updateUser($update, $where);
+                    if ($cekemail[0]['shifting'] == 'Y') {
+                        $cariwaktu = array(
+                            'upt' => substr($cekemail[0]['shifting'],0,2)
+                        );
+                    } else {
+                        $cariwaktu = array(
+                            'jenis' => 'office',
+                            'gunakan' => 'Y'
+                        );
+                    }
+                    $waktu = $this->user->getSettingWaktu($cariwaktu);
                     $getRole = $this->user->getUserRole($cekemail[0]['id_user']);
                     $getLokasi = $this->user->getLokasiKantor($cekemail[0]['lokasi_kantor_id']);
                     $output['role'] = $getRole;
+                    $output['setting_waktu'] = $waktu;
                     $output['lokasi_kantor'] = $getLokasi;
 
                     unset($cekemail[0]["password"]);
@@ -75,7 +85,7 @@ class Auth extends RestController
                 } else {
                     $this->response([
                         'status' => FALSE,
-                        'message' => 'Wrong password'
+                        'message' => 'Password salah'
                     ], RESTController::HTTP_BAD_REQUEST);
                 }
             } else {
@@ -87,7 +97,7 @@ class Auth extends RestController
         } else {
             $this->response([
                 'status' => FALSE,
-                'message' => 'User not found'
+                'message' => 'User tidak ditemukan'
             ], RESTController::HTTP_BAD_REQUEST);
         }
     }
