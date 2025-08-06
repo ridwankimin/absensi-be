@@ -241,7 +241,8 @@ class Auth extends RestController
         }
     }
 
-    public function resetPass_post() {
+    public function resetPass_post()
+    {
         $this->load->library('Authorization_Token');
         $is_valid_token = $this->authorization_token->validateToken();
 
@@ -278,7 +279,7 @@ class Auth extends RestController
                     'last_login' => date('Y-m-d H:i:s')
                 );
                 $ceksimpan = $this->user->updateUser($simpanpassword, $q);
-                if($ceksimpan > 0) {
+                if ($ceksimpan > 0) {
                     $this->response([
                         'status' => TRUE,
                         'message' => "Berhasil simpan password baru"

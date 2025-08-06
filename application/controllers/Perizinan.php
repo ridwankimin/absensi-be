@@ -46,9 +46,6 @@ class Perizinan extends RestController
                 'user_input'   => $this->post('user_input'),
                 'created_at'   => date('Y-m-d H:i:s')
             ];
-        // if ($this->post('jenis_izin') == '1' && $this->post('nomor') != '') {
-        //     $data['nomor'] = preg_replace('/\s+/', '', $this->post('nomor'));
-        // }
 
         if ($this->post('jenis_izin') == 'Dinas Luar' && $this->post('nomor') != '') {
             $data['nomor'] = preg_replace('/\s+/', '', $this->post('nomor'));
@@ -96,9 +93,79 @@ class Perizinan extends RestController
             ], 500);
         }
     }
+
     public function index_options()
     {
         // tangani preflight CORS
         return $this->response(null, 200);
+    }
+
+    public function index_get()
+    {
+        $nip = $this->get('nip');
+
+        if (!$nip) {
+            return $this->response([
+                'status' => false,
+                'message' => 'NIP tidak diberikan'
+            ], 400);
+        }
+
+        $data = $this->perizinan->get_by_user($nip);
+
+        if ($data) {
+            return $this->response([
+                'status' => true,
+                'message' => 'Data ditemukan',
+                'data' => $data
+            ], 200);
+        } else {
+            return $this->response([
+                'status' => false,
+                'message' => 'Data tidak ditemukan'
+            ], 404);
+        }
+    }
+
+    public function index_delete($id = null)
+    {
+        if (!$id) {
+            return $this->response([
+                'status' => false,
+                'message' => 'ID tidak diberikan'
+            ], 400);
+        }
+
+        // Ambil data untuk cek lampiran
+        $data = $this->perizinan->get_by_id($id);
+        if (!$data) {
+            return $this->response([
+                'status' => false,
+                'message' => 'Data tidak ditemukan'
+            ], 404);
+        }
+
+        // Hapus file lampiran jika ada
+        if (!empty($data['lampiran'])) {
+            $file_path = FCPATH . 'uploads/' . $data['lampiran'];
+            if (file_exists($file_path)) {
+                unlink($file_path);
+            }
+        }
+
+        // Hapus dari database
+        $delete = $this->perizinan->delete($id);
+
+        if ($delete) {
+            return $this->response([
+                'status' => true,
+                'message' => 'Data berhasil dihapus'
+            ], 200);
+        } else {
+            return $this->response([
+                'status' => false,
+                'message' => 'Gagal menghapus data'
+            ], 500);
+        }
     }
 }
